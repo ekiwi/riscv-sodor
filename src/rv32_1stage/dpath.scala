@@ -193,26 +193,26 @@ class DatPath(implicit conf: SodorConfiguration) extends Module
    // Printout
    // pass output through the spike-dasm binary (found in riscv-tools) to turn
    // the DASM(%x) into a disassembly string.
-   printf("Cyc= %d Op1=[0x%x] Op2=[0x%x] W[%c,%d= 0x%x] %c Mem[%d: R:0x%x W:0x%x] PC= 0x%x %c%c DASM(%x)\n"
-      , csr.io.time(31,0)
-      , alu_op1
-      , alu_op2
-      , Mux(io.ctl.rf_wen, Str("W"), Str("_"))
-      , wb_addr
-      , wb_data
-      , Mux(csr.io.exception, Str("E"), Str(" ")) // EXC -> E
-      , io.ctl.wb_sel
-      , io.dmem.resp.bits.data
-      , io.dmem.req.bits.data
-      , pc_reg
-      , Mux(io.ctl.stall, Str("s"), Str(" "))
-      , Mux(io.ctl.pc_sel  === 1.U, Str("B"),
-         Mux(io.ctl.pc_sel === 2.U, Str("J"),
-         Mux(io.ctl.pc_sel === 3.U, Str("K"),// JR -> K
-         Mux(io.ctl.pc_sel === 4.U, Str("X"),// EX -> X
-         Mux(io.ctl.pc_sel === 0.U, Str(" "), Str("?"))))))
-      , inst
-      )
+   // printf("Cyc= %d Op1=[0x%x] Op2=[0x%x] W[%c,%d= 0x%x] %c Mem[%d: R:0x%x W:0x%x] PC= 0x%x %c%c DASM(%x)\n"
+   //    , csr.io.time(31,0)
+   //    , alu_op1
+   //    , alu_op2
+   //    , Mux(io.ctl.rf_wen, Str("W"), Str("_"))
+   //    , wb_addr
+   //    , wb_data
+   //    , Mux(csr.io.exception, Str("E"), Str(" ")) // EXC -> E
+   //    , io.ctl.wb_sel
+   //    , io.dmem.resp.bits.data
+   //    , io.dmem.req.bits.data
+   //    , pc_reg
+   //    , Mux(io.ctl.stall, Str("s"), Str(" "))
+   //    , Mux(io.ctl.pc_sel  === 1.U, Str("B"),
+   //       Mux(io.ctl.pc_sel === 2.U, Str("J"),
+   //       Mux(io.ctl.pc_sel === 3.U, Str("K"),// JR -> K
+   //       Mux(io.ctl.pc_sel === 4.U, Str("X"),// EX -> X
+   //       Mux(io.ctl.pc_sel === 0.U, Str(" "), Str("?"))))))
+   //    , inst
+   //    )
 
    if (PRINT_COMMIT_LOG)
    {
