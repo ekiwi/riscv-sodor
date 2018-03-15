@@ -19,7 +19,7 @@ class DummyDMI(implicit conf: SodorConfiguration) extends Module {
 	io.resp.nodeq
 }
 
-class FuzzTop extends Module {
+class Sodor1Stage extends Module {
 	val FuzzDebug = false
 	implicit val conf = SodorConfiguration()
 
@@ -71,6 +71,6 @@ class Top extends Module
 
 object elaborate {
   def main(args: Array[String]): Unit = {
-    chisel3.Driver.execute(args, () => new FuzzTop)
+    chisel3.Driver.execute(args, () => new Sodor1Stage)
   }
 }
