@@ -250,30 +250,30 @@ class DatPath(implicit conf: SodorConfiguration) extends Module
    val debug_wb_pc = Wire(UInt(32.W))
    debug_wb_pc := Mux(Reg(next=wb_hazard_stall), 0.U, Reg(next=exe_pc))
    val debug_wb_inst = Reg(next=Mux((wb_hazard_stall || io.ctl.exe_kill || !exe_valid), BUBBLE, exe_inst))
-   printf("Cyc=%d Op1=[0x%x] Op2=[0x%x] W[%c,%d= 0x%x] [%c,0x%x] %d %c %c PC=(0x%x,0x%x,0x%x) [%x,%d,%d], WB: DASM(%x)\n"
-      , csr.io.time(31,0)
-      , exe_alu_op1
-      , exe_alu_op2
-      , Mux(wb_reg_ctrl.rf_wen, Str("W"), Str("_"))
-      , wb_reg_wbaddr
-      , wb_wbdata
-      , Mux(io.ctl.exception, Str("E"), Str("_"))
-      , io.imem.resp.bits.inst
-      , irt_reg(11,0)
-      , Mux(wb_hazard_stall, Str("H"), Str(" "))  // HAZ -> H
-      , Mux(io.ctl.pc_sel === 1.U, Str("B"),   // Br -> B
-        Mux(io.ctl.pc_sel === 2.U, Str("J"),   // J -> J
-        Mux(io.ctl.pc_sel === 3.U, Str("R"),   // JR -> R
-        Mux(io.ctl.pc_sel === 4.U, Str("X"),   //XPCT -> X
-        Mux(io.ctl.pc_sel === 0.U, Str(" "), Str("?"))))))
-      , io.imem.debug.if_pc(31,0)
-      , exe_pc(31,0)
-      , Mux(Reg(next=wb_hazard_stall), 0.U, Reg(next=exe_pc(31,0)))
-      , io.imem.debug.if_inst(6,0)
-      , Mux(exe_valid, exe_inst, BUBBLE)(6,0)
-      , debug_wb_inst(6,0)
-      , debug_wb_inst
-      )
+   // printf("Cyc=%d Op1=[0x%x] Op2=[0x%x] W[%c,%d= 0x%x] [%c,0x%x] %d %c %c PC=(0x%x,0x%x,0x%x) [%x,%d,%d], WB: DASM(%x)\n"
+   //    , csr.io.time(31,0)
+   //    , exe_alu_op1
+   //    , exe_alu_op2
+   //    , Mux(wb_reg_ctrl.rf_wen, Str("W"), Str("_"))
+   //    , wb_reg_wbaddr
+   //    , wb_wbdata
+   //    , Mux(io.ctl.exception, Str("E"), Str("_"))
+   //    , io.imem.resp.bits.inst
+   //    , irt_reg(11,0)
+   //    , Mux(wb_hazard_stall, Str("H"), Str(" "))  // HAZ -> H
+   //    , Mux(io.ctl.pc_sel === 1.U, Str("B"),   // Br -> B
+   //      Mux(io.ctl.pc_sel === 2.U, Str("J"),   // J -> J
+   //      Mux(io.ctl.pc_sel === 3.U, Str("R"),   // JR -> R
+   //      Mux(io.ctl.pc_sel === 4.U, Str("X"),   //XPCT -> X
+   //      Mux(io.ctl.pc_sel === 0.U, Str(" "), Str("?"))))))
+   //    , io.imem.debug.if_pc(31,0)
+   //    , exe_pc(31,0)
+   //    , Mux(Reg(next=wb_hazard_stall), 0.U, Reg(next=exe_pc(31,0)))
+   //    , io.imem.debug.if_inst(6,0)
+   //    , Mux(exe_valid, exe_inst, BUBBLE)(6,0)
+   //    , debug_wb_inst(6,0)
+   //    , debug_wb_inst
+   //    )
 
    // for debugging, print out the commit information.
    // can be compared against the riscv-isa-run Spike ISA simulator's commit logger.
