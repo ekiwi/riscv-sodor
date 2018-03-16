@@ -225,26 +225,26 @@ class DatPath(implicit conf: SodorConfiguration) extends Module
         
    
    // Printout
-   printf("Cyc= %d Op1=[0x%x] Op2=[0x%x] W[%c,%d= 0x%x] PC= (0x%x,0x%x) [%x,%x] %c%c%c Exe: DASM(%x)\n"
-      , tsc_reg(31,0)
-      , exe_alu_op1
-      , exe_alu_op2
-      , Mux(io.ctl.rf_wen, Str("W"), Str("_"))
-      , exe_wbaddr
-      , exe_wbdata
-      , if_reg_pc
-      , exe_reg_pc
-      , if_inst(6,0)
-      , exe_reg_inst(6,0)
-      , Mux(io.ctl.stall, Str("S"), Str(" ")) //stall -> S
-      , Mux(io.ctl.if_kill, Str("K"), Str(" ")) // Kill -> K
-      , Mux(io.ctl.pc_sel  === UInt(1), Str("B"), // BR -> B
-         Mux(io.ctl.pc_sel === UInt(2), Str("J"),
-         Mux(io.ctl.pc_sel === UInt(3), Str("R"),  // JR -> R
-         Mux(io.ctl.pc_sel === UInt(4), Str("E"),  // EX -> E
-         Mux(io.ctl.pc_sel === UInt(0), Str(" "), Str("?"))))))
-      , exe_reg_inst
-      )
+   // printf("Cyc= %d Op1=[0x%x] Op2=[0x%x] W[%c,%d= 0x%x] PC= (0x%x,0x%x) [%x,%x] %c%c%c Exe: DASM(%x)\n"
+   //    , tsc_reg(31,0)
+   //    , exe_alu_op1
+   //    , exe_alu_op2
+   //    , Mux(io.ctl.rf_wen, Str("W"), Str("_"))
+   //    , exe_wbaddr
+   //    , exe_wbdata
+   //    , if_reg_pc
+   //    , exe_reg_pc
+   //    , if_inst(6,0)
+   //    , exe_reg_inst(6,0)
+   //    , Mux(io.ctl.stall, Str("S"), Str(" ")) //stall -> S
+   //    , Mux(io.ctl.if_kill, Str("K"), Str(" ")) // Kill -> K
+   //    , Mux(io.ctl.pc_sel  === UInt(1), Str("B"), // BR -> B
+   //       Mux(io.ctl.pc_sel === UInt(2), Str("J"),
+   //       Mux(io.ctl.pc_sel === UInt(3), Str("R"),  // JR -> R
+   //       Mux(io.ctl.pc_sel === UInt(4), Str("E"),  // EX -> E
+   //       Mux(io.ctl.pc_sel === UInt(0), Str(" "), Str("?"))))))
+   //    , exe_reg_inst
+   //    )
 }
 
  
