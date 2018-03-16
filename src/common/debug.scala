@@ -83,6 +83,16 @@ class SimDTM(implicit val conf: SodorConfiguration) extends BlackBox {
   }
 }
 
+class DummyDMI(implicit conf: SodorConfiguration) extends Module {
+	val io = IO(new DMIIO)
+	io.req.noenq
+	io.req.bits.addr := DontCare
+	io.req.bits.op   := DontCare
+	io.req.bits.data := DontCare
+	io.resp.nodeq
+}
+
+
 class DebugDPath(implicit val conf: SodorConfiguration) extends Bundle
 {
   // REG access

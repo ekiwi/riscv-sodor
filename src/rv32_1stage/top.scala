@@ -10,15 +10,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 
 
-class DummyDMI(implicit conf: SodorConfiguration) extends Module {
-	val io = IO(new DMIIO)
-	io.req.noenq
-	io.req.bits.addr := DontCare
-	io.req.bits.op   := DontCare
-	io.req.bits.data := DontCare
-	io.resp.nodeq
-}
-
 class Sodor1Stage extends Module {
 	val FuzzDebug = false
 	implicit val conf = SodorConfiguration()
