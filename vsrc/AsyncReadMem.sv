@@ -2,6 +2,7 @@ module AsyncReadMem
   #(parameter NUM_BYTES = (1 << 21),
     parameter DATA_WIDTH = 32)
    (input clk,
+    input reset,
     
     input [ADDR_WIDTH-1:0] hw_addr,
     input [DATA_WIDTH-1:0] hw_data,
@@ -31,6 +32,7 @@ module AsyncReadMem
   generate
     for (i = 0; i < MASK_WIDTH; i = i + 1) begin : gen_sel_read
       always @ (posedge clk) begin
+        if (~reset)
         if (hw_en) begin
           if (hw_mask[i] == 1'b1) begin
             mem[hw_addr + i] <= hw_data[i*8 +: 8];
@@ -41,6 +43,7 @@ module AsyncReadMem
             mem[dw_addr + i] <= dw_data[i*8 +: 8];
           end
         end
+        end
       end
       always @* begin
         hr_data[i*8 +: 8] = mem[hr_addr + i];
@@ -50,4 +53,13 @@ module AsyncReadMem
     end 
   endgenerate
    
+  integer j;
+  always @ (posedge clk) begin
+    if (reset) begin
+      for (j = 0; j < NUM_BYTES; j = j + 1) begin
+        mem[j] = 0;
+      end
+    end
+  end
+
 endmodule // AsyncReadMem

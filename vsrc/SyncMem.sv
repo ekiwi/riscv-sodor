@@ -2,6 +2,7 @@ module SyncMem
   #(parameter NUM_BYTES = (1 << 21),
     parameter DATA_WIDTH = 32)
    (input clk,
+    input reset,
     
     input [ADDR_WIDTH-1:0] hw_addr,
     input [DATA_WIDTH-1:0] hw_data,
@@ -40,6 +41,7 @@ module SyncMem
   generate
     for (i = 0; i < MASK_WIDTH; i = i + 1) begin : gen_sel_writes
       always @ (posedge clk) begin
+        if (~reset) begin
         if (hw_en) begin
           if (hw_mask[i] == 1'b1) begin
             mem[hw_addr + i] <= hw_data[i*8 +: 8];
@@ -51,11 +53,22 @@ module SyncMem
           end
         end
       end
+      end
       assign  hr_data[i*8 +: 8] = mem[reghr_addr + i];
       assign  dataInstr_0_data[i*8 +: 8] = mem[regdataInstr_0_addr + i];
       assign  dataInstr_1_data[i*8 +: 8] = mem[regdataInstr_1_addr + i];
     end
   endgenerate
-   
-endmodule 
+
+
+  integer j;
+  always @ (posedge clk) begin
+    if (reset) begin
+      for (j = 0; j < NUM_BYTES; j = j + 1) begin
+        mem[j] = 0;
+      end
+    end
+  end
+
+endmodule
 
