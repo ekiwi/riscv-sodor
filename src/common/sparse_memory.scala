@@ -23,8 +23,7 @@ class SparseAsyncReadMem(val addrWidth : Int) extends Module {
 	// TODO: set DoNotCare or something...
 
 	val address = Reg(Vec(entries, UInt(addrWidth.W)))
-	// TODO: how can we add a reset to a vector register?
-	val address_valid = Reg(Vec(entries, Bool()))
+	val address_valid = RegInit(VecInit(Seq.fill(entries)(false.B)))
 	val data = Mem(entries, UInt(dataWidth.W))
 
 	// search for addresses
