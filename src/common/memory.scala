@@ -64,8 +64,8 @@ class d2h2i1(val addrWidth : Int) extends Bundle{
    val hw = new  Wport(addrWidth,32)
    val dw = new  Wport(addrWidth,32)
    val hr = new  Rport(addrWidth,32)
-   val clk = Input(Clock())
-   val reset = Input(Bool())
+   //val clk = Input(Clock())
+   //val reset = Input(Bool())
 }
 
 class AsyncReadMem(val addrWidth : Int) extends BlackBox{
@@ -113,9 +113,10 @@ class AsyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 21))(imp
    val num_bytes_per_line = 8
    val num_lines = num_bytes / num_bytes_per_line
    println("\n    Sodor Tile: creating Asynchronous Scratchpad Memory of size " + num_lines*num_bytes_per_line/1024 + " kB\n")
-   val async_data = Module(new AsyncReadMem(log2Ceil(num_bytes)))
-   async_data.io.clk := clock
-   async_data.io.reset := reset.toBool
+   val async_data = Module(new SparseAsyncReadMem(log2Ceil(num_bytes)))
+   async_data.io <> DontCare
+   //async_data.io.clk := clock
+   //async_data.io.reset := reset.toBool
    for (i <- 0 until num_core_ports)
    {
       io.core_ports(i).resp.valid := io.core_ports(i).req.valid
@@ -175,9 +176,10 @@ class SyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 21))(impl
    val num_bytes_per_line = 8
    val num_lines = num_bytes / num_bytes_per_line
    println("\n    Sodor Tile: creating Synchronous Scratchpad Memory of size " + num_lines*num_bytes_per_line/1024 + " kB\n")
-   val sync_data = Module(new SyncMem(log2Ceil(num_bytes)))
-   sync_data.io.clk := clock
-   sync_data.io.reset := reset.toBool
+   val sync_data = Module(new SparseSyncMem(log2Ceil(num_bytes)))
+   sync_data.io <> DontCare
+   //sync_data.io.clk := clock
+   //sync_data.io.reset := reset.toBool
    for (i <- 0 until num_core_ports)
    {
       io.core_ports(i).resp.valid := Reg(next = io.core_ports(i).req.valid)
