@@ -15,6 +15,9 @@ class SparseAsyncReadMem(val addrWidth : Int) extends Module {
 	val dataWidth = 32
 	val entries = 256
 	val idxWidth = log2Ceil(entries)
+	require(dataWidth % 8 == 0)
+	// TODO Check endianness, but since we cast in each direction, it should be okay
+	val MemDataType = Vec(dataWidth / 8, UInt(8.W))
 
 	val io = IO(new d2h2i1(addrWidth))
 
@@ -24,7 +27,8 @@ class SparseAsyncReadMem(val addrWidth : Int) extends Module {
 
 	val address = Reg(Vec(entries, UInt(addrWidth.W)))
 	val address_valid = RegInit(VecInit(Seq.fill(entries)(false.B)))
-	val data = Mem(entries, UInt(dataWidth.W))
+	// Mask is byte granularity
+	val data = Mem(entries, MemDataType)
 
 	// search for addresses
 	case class MatchOption(valid: Bool, idx: UInt)
@@ -37,7 +41,7 @@ class SparseAsyncReadMem(val addrWidth : Int) extends Module {
 	// read
 	def read(addr: UInt) = {
 		val mm = addrMatch(addr)
-		Mux(mm.valid, data(mm.idx), 0.U)
+		Mux(mm.valid, data(mm.idx).asUInt, 0.U)
 	}
 	io.dataInstr(0).data := read(io.dataInstr(0).addr)
 	io.dataInstr(1).data := read(io.dataInstr(1).addr)
@@ -60,14 +64,8 @@ class SparseAsyncReadMem(val addrWidth : Int) extends Module {
 	when(io.dw.en) {
 		address(dw_insert) := io.dw.addr
 		address_valid(dw_insert) := true.B
-		// TODO: obey mask!
-		//val mask : Seq[Bool] = io.dw.mask.toBools
-		//val dd = Vec(for(ii <- mask.size until 0) yield io.dw.data(ii*8-1, (ii-1)*8))
-		//data.write(dw_insert, dd, mask)
-
-		when(io.dw.mask =/= 0.U) {
-			data(dw_insert) := io.dw.data
-		}
+		val w_data = io.dw.data.asTypeOf(MemDataType)
+		data.write(dw_insert, w_data, io.dw.mask.toBools)
 	}
 }
 
