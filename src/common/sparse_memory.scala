@@ -33,9 +33,9 @@ class SparseAsyncReadMem(val addrWidth : Int) extends Module {
 	// search for addresses
 	case class MatchOption(valid: Bool, idx: UInt)
 	def addrMatch(addr: UInt) = {
-		val vector = Cat(address.zip(address_valid).map{
-			case (a, v) => a === addr && v})
-		MatchOption(vector =/= 0.U, OHToUInt(vector))
+		val matches = VecInit(address.zip(address_valid).map{
+			case (a, v) => (a === addr && v).suggestName(s"pick_$addr")}).asUInt
+		MatchOption(matches =/= 0.U, OHToUInt(matches))
 	}
 
 	// read
