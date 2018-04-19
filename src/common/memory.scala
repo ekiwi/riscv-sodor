@@ -135,6 +135,7 @@ class AsyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 21))(imp
    val num_lines = num_bytes / num_bytes_per_line
    println("\n    Sodor Tile: creating Asynchronous Scratchpad Memory of size " + num_lines*num_bytes_per_line/1024 + " kB\n")
    val async_data = Module(new AsyncReadMem(log2Ceil(num_bytes)))
+   async_data.io <> DontCare
 
    for (i <- 0 until num_core_ports)
    {
@@ -196,6 +197,8 @@ class SyncScratchPadMemory(num_core_ports: Int, num_bytes: Int = (1 << 21))(impl
    val num_lines = num_bytes / num_bytes_per_line
    println("\n    Sodor Tile: creating Synchronous Scratchpad Memory of size " + num_lines*num_bytes_per_line/1024 + " kB\n")
    val sync_data = Module(new SyncMem(log2Ceil(num_bytes)))
+   sync_data.io <> DontCare
+
    for (i <- 0 until num_core_ports)
    {
       io.core_ports(i).resp.valid := Reg(next = io.core_ports(i).req.valid)
