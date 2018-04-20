@@ -416,26 +416,26 @@ class DatPath(implicit conf: SodorConfiguration) extends Module
    io.dmem.req.bits.data := mem_reg_rs2_data
 
    // Printout
-   printf("Cyc= %d (0x%x, 0x%x, 0x%x, 0x%x, 0x%x) WB[%c%c %x: 0x%x] %c %c %c ExeInst: DASM(%x)\n"
-      , csr.io.time(31,0)
-      , if_reg_pc
-      , dec_reg_pc
-      , exe_reg_pc
-      , Reg(next=exe_reg_pc)
-      , Reg(next=Reg(next=exe_reg_pc))
-      , Mux(wb_reg_ctrl_rf_wen, Str("M"), Str(" ")) 
-      , Mux(mem_reg_ctrl_rf_wen, Str("Z"), Str(" "))
-      , wb_reg_wbaddr
-      , wb_reg_wbdata
-      , Mux(io.ctl.full_stall, Str("F"),   //FREEZE-> F 
-        Mux(io.ctl.dec_stall, Str("S"), Str(" ")))  //STALL->S
-      , Mux(io.ctl.exe_pc_sel === 1.U, Str("B"),  //BJ -> B
-        Mux(io.ctl.exe_pc_sel === 2.U, Str("J"),   //JR -> J
-        Mux(io.ctl.exe_pc_sel === 3.U, Str("E"),   //EX -> E
-        Mux(io.ctl.exe_pc_sel === 0.U, Str(" "), Str("?")))))
-      , Mux(csr.io.exception, Str("X"), Str(" "))
-      , Mux(io.ctl.pipeline_kill, BUBBLE, exe_reg_inst)
-      )
+   // printf("Cyc= %d (0x%x, 0x%x, 0x%x, 0x%x, 0x%x) WB[%c%c %x: 0x%x] %c %c %c ExeInst: DASM(%x)\n"
+   //    , csr.io.time(31,0)
+   //    , if_reg_pc
+   //    , dec_reg_pc
+   //    , exe_reg_pc
+   //    , Reg(next=exe_reg_pc)
+   //    , Reg(next=Reg(next=exe_reg_pc))
+   //    , Mux(wb_reg_ctrl_rf_wen, Str("M"), Str(" "))
+   //    , Mux(mem_reg_ctrl_rf_wen, Str("Z"), Str(" "))
+   //    , wb_reg_wbaddr
+   //    , wb_reg_wbdata
+   //    , Mux(io.ctl.full_stall, Str("F"),   //FREEZE-> F
+   //      Mux(io.ctl.dec_stall, Str("S"), Str(" ")))  //STALL->S
+   //    , Mux(io.ctl.exe_pc_sel === 1.U, Str("B"),  //BJ -> B
+   //      Mux(io.ctl.exe_pc_sel === 2.U, Str("J"),   //JR -> J
+   //      Mux(io.ctl.exe_pc_sel === 3.U, Str("E"),   //EX -> E
+   //      Mux(io.ctl.exe_pc_sel === 0.U, Str(" "), Str("?")))))
+   //    , Mux(csr.io.exception, Str("X"), Str(" "))
+   //    , Mux(io.ctl.pipeline_kill, BUBBLE, exe_reg_inst)
+   //    )
 
 }
 
